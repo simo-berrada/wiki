@@ -15,8 +15,6 @@ collections:
     label_singular: Article
     description: Public Data Science knowledge.
     folder: content/articles
-    media_folder: content/media
-    public_folder: /wiki/media
     create: true
     delete: true
     extension: md

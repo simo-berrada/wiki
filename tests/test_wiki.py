@@ -31,7 +31,7 @@ author: Test
 updated: 2026-06-15
 ---
 
-![Missing file](/media/missing.png)
+![Missing file](/wiki/media/missing.png)
 """,
         encoding="utf-8",
     )
@@ -50,7 +50,8 @@ def test_decap_has_one_public_article_collection() -> None:
     assert len(config["collections"]) == 1
     collection = config["collections"][0]
     assert collection["folder"] == "content/articles"
-    assert collection["media_folder"] == "content/media"
+    assert "media_folder" not in collection
+    assert "public_folder" not in collection
 
 
 def test_netlify_hosts_the_working_editor() -> None:
@@ -66,6 +67,8 @@ def test_netlify_hosts_the_working_editor() -> None:
     }
     assert config["media_folder"] == "content/media"
     assert len(config["collections"]) == 1
+    assert "media_folder" not in config["collections"][0]
+    assert "public_folder" not in config["collections"][0]
     assert 'rel="cms-config-url"' in index
 
 

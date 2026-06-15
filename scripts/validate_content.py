@@ -110,10 +110,14 @@ def _validate_local_media(
     ):
         return None
 
-    if path.startswith("/media/"):
-        resolved = content_root / path.removeprefix("/")
+    media_match = re.match(r"^/(?:[^/]+/)*media/(.+)$", path, re.IGNORECASE)
+    if media_match:
+        resolved = content_root / "media" / media_match.group(1)
     elif path.startswith("/"):
-        return f"local media must use /media/ or a relative path: {target}"
+        return (
+            "local media must use /media/, a GitHub Pages "
+            f"/<repository>/media/ path, or a relative path: {target}"
+        )
     else:
         resolved = (article.path.parent / path).resolve()
 
@@ -210,4 +214,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
