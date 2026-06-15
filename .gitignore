@@ -1,0 +1,10 @@
+.venv/
+.uv-cache/
+.uv-python/
+.build/
+site/
+.pytest_cache/
+.pytest_tmp/
+pytest-cache-files-*/
+__pycache__/
+*.py[cod]

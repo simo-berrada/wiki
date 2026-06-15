@@ -1,20 +1,46 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# WOAH Data Science Wiki
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+A single public Data Science wiki with a browser-based editor.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+- Wiki: `/`
+- Editor for approved GitHub collaborators: `/admin/`
+- Hosting: GitHub Pages
+- Automated builds: GitHub Actions
+- Content: `content/articles/`
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Everything published by this project is public. Do not add confidential,
+personal, regulated, or security-sensitive information.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Local setup
+
+Python 3.12 is supported.
+
+```powershell
+uv venv --python 3.12
+uv pip install --python .venv\Scripts\python.exe -r requirements.txt
+.\.venv\Scripts\python.exe scripts\build_site.py
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+If OneDrive locks generated folders:
+
+```powershell
+$env:WIKI_BUILD_ROOT = "C:\tmp\woah-wiki-build"
+$env:WIKI_SITE_ROOT = "C:\tmp\woah-wiki-site"
+.\.venv\Scripts\python.exe scripts\build_site.py
+```
+
+Preview:
+
+```powershell
+.\.venv\Scripts\python.exe -m http.server 8000 --directory site
+```
+
+## Publishing
+
+GitHub Actions validates, tests, builds, and deploys every push to `main`.
+Complete the initial setup in [OPERATIONS.md](OPERATIONS.md).
+
+The workflow automatically fills the GitHub repository and Pages URL into the
+built Decap configuration. The repository variable `DECAP_SITE_DOMAIN`
+identifies the separately hosted Netlify OAuth broker required for GitHub login.
