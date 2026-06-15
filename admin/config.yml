@@ -10,6 +10,8 @@ publish_mode: simple
 site_url: REPLACE_WITH_SITE_URL
 display_url: REPLACE_WITH_SITE_URL
 logo_url: REPLACE_WITH_SITE_URLassets/images/favicon.png
+media_folder: content/media
+public_folder: REPLACE_WITH_MEDIA_PATH
 
 collections:
   - name: articles

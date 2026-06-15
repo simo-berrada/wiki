@@ -45,6 +45,8 @@ def test_decap_has_one_public_article_collection() -> None:
 
     assert config["backend"]["name"] == "github"
     assert config["backend"]["branch"] == "main"
+    assert config["media_folder"] == "content/media"
+    assert config["public_folder"] == "REPLACE_WITH_MEDIA_PATH"
     assert len(config["collections"]) == 1
     collection = config["collections"][0]
     assert collection["folder"] == "content/articles"
@@ -72,4 +74,3 @@ def test_built_site_contains_wiki_and_editor() -> None:
     assert (SITE_ROOT / "admin" / "config.yml").exists()
     assert not (SITE_ROOT / "internal").exists()
     verify_site()
-
