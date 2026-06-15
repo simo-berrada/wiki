@@ -77,12 +77,6 @@ def install_admin() -> None:
     destination = SITE_ROOT / "admin"
     shutil.copytree(ROOT / "admin", destination)
 
-    build_id = os.environ.get("GITHUB_SHA", "local")
-    index_path = destination / "index.html"
-    index = index_path.read_text(encoding="utf-8")
-    index = index.replace("REPLACE_WITH_BUILD_ID", build_id)
-    index_path.write_text(index, encoding="utf-8")
-
     config_path = destination / "config.yml"
     config = config_path.read_text(encoding="utf-8")
     repository = os.environ.get(
@@ -128,7 +122,6 @@ def verify_site() -> None:
         raise RuntimeError("Built site is missing:\n- " + "\n- ".join(missing))
 
     config = (SITE_ROOT / "admin" / "config.yml").read_text(encoding="utf-8")
-    index = (SITE_ROOT / "admin" / "index.html").read_text(encoding="utf-8")
     required_placeholders = (
         "REPLACE_WITH_GITHUB_REPOSITORY",
         "REPLACE_WITH_SITE_URL",
@@ -140,8 +133,6 @@ def verify_site() -> None:
         raise RuntimeError(
             "GitHub Pages build contains unresolved editor configuration."
         )
-    if "REPLACE_WITH_BUILD_ID" in index:
-        raise RuntimeError("GitHub Pages build contains an unresolved build ID.")
 
 
 def main() -> int:

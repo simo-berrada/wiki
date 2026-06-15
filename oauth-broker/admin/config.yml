@@ -1,0 +1,63 @@
+backend:
+  name: github
+  repo: simo-berrada/wiki
+  branch: main
+
+publish_mode: simple
+site_url: https://simo-berrada.github.io/wiki/
+display_url: https://simo-berrada.github.io/wiki/
+media_folder: content/media
+public_folder: /wiki/media
+
+collections:
+  - name: articles
+    label: Articles
+    label_singular: Article
+    description: Public Data Science knowledge.
+    folder: content/articles
+    media_folder: content/media
+    public_folder: /wiki/media
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} - {{topic}} - {{audience}}"
+    fields:
+      - { label: Title, name: title, widget: string, required: true }
+      - { label: Summary, name: summary, widget: text, required: true }
+      - label: Topic
+        name: topic
+        widget: select
+        required: true
+        options:
+          - Foundations
+          - Data and Governance
+          - Statistics and Visualization
+          - Machine Learning and AI
+          - Engineering and MLOps
+          - Tools and Recipes
+          - WOAH Practice
+      - label: Audience
+        name: audience
+        widget: select
+        required: true
+        options:
+          - Beginner
+          - Practitioner
+          - Technical
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        default: []
+        field: { label: Tag, name: tag, widget: string }
+      - { label: Author, name: author, widget: string, required: true }
+      - label: Updated
+        name: updated
+        widget: datetime
+        required: true
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+      - { label: Body, name: body, widget: markdown, required: true }

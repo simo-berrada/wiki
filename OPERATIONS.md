@@ -4,7 +4,7 @@ The finished system has one public wiki and one editor:
 
 ```text
 https://YOUR-GITHUB-NAME.github.io/wiki/
-https://YOUR-GITHUB-NAME.github.io/wiki/admin/
+https://YOUR-NETLIFY-SITE.netlify.app/admin/
 ```
 
 Anyone can read the wiki without an account. Only approved GitHub collaborators
@@ -67,8 +67,8 @@ Success check: the files appear at
 
 The first deployment can take several minutes.
 
-At this point the wiki works for readers. The editor page exists, but GitHub
-login will not work until sections 4-6 are complete.
+At this point the wiki works for readers. Its `/admin/` address redirects to the
+Netlify-hosted editor, whose GitHub login is configured in sections 4-6.
 
 ## 4. Create a GitHub OAuth application
 
@@ -151,10 +151,10 @@ woah-wiki-auth.netlify.app
 8. Select **Run workflow** on branch `main`.
 9. Wait for the deployment to finish.
 
-Then open:
+Then open the editor on the Netlify project:
 
 ```text
-https://YOUR-GITHUB-NAME.github.io/wiki/admin/
+https://YOUR-NETLIFY-SITE.netlify.app/admin/
 ```
 
 Select **Login with GitHub** and approve the OAuth request.
@@ -186,7 +186,7 @@ The repository is public, but only collaborators with write access can publish.
 
 ### Editor
 
-1. Open `/admin/`.
+1. Open the Netlify `/admin/` address.
 2. Log in with an invited GitHub account.
 3. Select **New Article**.
 4. Complete all required fields.

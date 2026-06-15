@@ -53,6 +53,22 @@ def test_decap_has_one_public_article_collection() -> None:
     assert collection["media_folder"] == "content/media"
 
 
+def test_netlify_hosts_the_working_editor() -> None:
+    config = yaml.safe_load(
+        (ROOT / "oauth-broker" / "admin" / "config.yml").read_text("utf-8")
+    )
+    index = (ROOT / "oauth-broker" / "admin" / "index.html").read_text("utf-8")
+
+    assert config["backend"] == {
+        "name": "github",
+        "repo": "simo-berrada/wiki",
+        "branch": "main",
+    }
+    assert config["media_folder"] == "content/media"
+    assert len(config["collections"]) == 1
+    assert 'rel="cms-config-url"' in index
+
+
 def test_github_pages_workflow_builds_and_deploys() -> None:
     workflow = (
         ROOT / ".github" / "workflows" / "pages.yml"
@@ -73,8 +89,6 @@ def test_built_site_contains_wiki_and_editor() -> None:
     assert (SITE_ROOT / "admin" / "index.html").exists()
     assert (SITE_ROOT / "admin" / "config.yml").exists()
     admin_index = (SITE_ROOT / "admin" / "index.html").read_text(encoding="utf-8")
-    assert 'rel="cms-config-url"' in admin_index
-    assert "config.yml?v=" in admin_index
-    assert "REPLACE_WITH_BUILD_ID" not in admin_index
+    assert "iridescent-quokka-3f9b9b.netlify.app/admin/" in admin_index
     assert not (SITE_ROOT / "internal").exists()
     verify_site()

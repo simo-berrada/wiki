@@ -11,7 +11,7 @@ technical guidance, and examples contributed by colleagues.
 - [Browse audience levels](audiences.md)
 - [Browse all tags](tags.md)
 
-<a href="./admin/">Edit the wiki</a>
+<a href="https://iridescent-quokka-3f9b9b.netlify.app/admin/">Edit the wiki</a>
 
 !!! info "Choose the right level"
     Articles are labelled **Beginner**, **Practitioner**, or **Technical** so
