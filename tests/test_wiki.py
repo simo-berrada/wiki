@@ -72,5 +72,9 @@ def test_built_site_contains_wiki_and_editor() -> None:
     assert (SITE_ROOT / "search" / "search_index.json").exists()
     assert (SITE_ROOT / "admin" / "index.html").exists()
     assert (SITE_ROOT / "admin" / "config.yml").exists()
+    admin_index = (SITE_ROOT / "admin" / "index.html").read_text(encoding="utf-8")
+    assert 'rel="cms-config-url"' in admin_index
+    assert "config.yml?v=" in admin_index
+    assert "REPLACE_WITH_BUILD_ID" not in admin_index
     assert not (SITE_ROOT / "internal").exists()
     verify_site()
