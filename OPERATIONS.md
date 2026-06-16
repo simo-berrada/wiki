@@ -1,14 +1,17 @@
 # GitHub Pages setup for beginners
 
-The finished system has one public wiki and one editor:
+The finished system is one public wiki. You only ever share a single link:
 
 ```text
 https://YOUR-GITHUB-NAME.github.io/wiki/
-https://YOUR-NETLIFY-SITE.netlify.app/admin/
 ```
 
+The editor is built into that site (an **Edit** button in the header, also
+reachable at `/wiki/admin/`). A small Netlify service is used only behind the
+scenes for the GitHub login — nobody needs to visit or share its address.
+
 Anyone can read the wiki without an account. Only approved GitHub collaborators
-can publish through the editor.
+can save changes through the editor.
 
 ## What you need
 
@@ -67,8 +70,8 @@ Success check: the files appear at
 
 The first deployment can take several minutes.
 
-At this point the wiki works for readers. Its `/admin/` address redirects to the
-Netlify-hosted editor, whose GitHub login is configured in sections 4-6.
+At this point the wiki works for readers. The built-in editor at `/admin/` needs
+the GitHub login configured in sections 4-6 before anyone can save.
 
 ## 4. Create a GitHub OAuth application
 
@@ -151,10 +154,10 @@ woah-wiki-auth.netlify.app
 8. Select **Run workflow** on branch `main`.
 9. Wait for the deployment to finish.
 
-Then open the editor on the Netlify project:
+Then open the editor on the wiki itself:
 
 ```text
-https://YOUR-NETLIFY-SITE.netlify.app/admin/
+https://YOUR-GITHUB-NAME.github.io/wiki/admin/
 ```
 
 Select **Login with GitHub** and approve the OAuth request.
@@ -186,26 +189,26 @@ The repository is public, but only collaborators with write access can publish.
 
 ### Editor
 
-1. Open the Netlify `/admin/` address.
+1. Open the wiki and click **Edit** in the header (or go to `/wiki/admin/`).
 2. Log in with an invited GitHub account.
-3. Select **New Article**.
-4. Complete all required fields.
+3. Open a page under **Pages**.
+4. Change its content.
 5. Select **Publish**.
 6. Confirm a new commit appears in the repository.
 7. Wait for the GitHub Action to finish.
-8. Confirm the article appears on the public wiki.
+8. Confirm the change appears on the public wiki.
 
 ## Normal operation
 
 Every edit follows this path:
 
 1. Decap creates a commit in GitHub.
-2. GitHub Actions validates the content.
-3. MkDocs builds the website.
-4. GitHub Pages deploys it.
-5. The public site updates after a few minutes.
+2. GitHub Actions builds the website with MkDocs.
+3. GitHub Pages deploys it.
+4. The public site updates after a few minutes.
 
-Technical contributors can also edit Markdown directly in `content/articles/`.
+Technical contributors can also edit the Markdown pages directly in `content/`.
+To add a new page, see [README.md](README.md).
 
 ## Important limits
 
@@ -214,7 +217,7 @@ Technical contributors can also edit Markdown directly in `content/articles/`.
 - Never commit the OAuth client secret.
 - Editors must be GitHub collaborators with write access.
 - Remove repository access when somebody should no longer edit.
-- If an article fails validation, the live site remains on its previous version.
+- If a build fails, the live site remains on its previous version.
 
 ## Checklist
 
@@ -226,7 +229,7 @@ Technical contributors can also edit Markdown directly in `content/articles/`.
 - [ ] Create the free Netlify OAuth broker.
 - [ ] Add the `DECAP_SITE_DOMAIN` repository variable.
 - [ ] Invite editors as GitHub collaborators.
-- [ ] Publish and verify a test article.
+- [ ] Publish and verify a test edit.
 
 References:
 

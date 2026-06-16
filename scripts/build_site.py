@@ -7,49 +7,12 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
-import yaml
 
-try:
-    from .validate_content import CONTENT_ROOT, ROOT, load_articles, validate_content
-except ImportError:
-    from validate_content import CONTENT_ROOT, ROOT, load_articles, validate_content
-
-
-BUILD_ROOT = Path(os.environ.get("WIKI_BUILD_ROOT", ROOT / ".build")).resolve()
+ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = Path(os.environ.get("WIKI_SITE_ROOT", ROOT / "site")).resolve()
 
 
-def _render_front_matter(metadata: dict, body: str) -> str:
-    front_matter = yaml.safe_dump(
-        metadata,
-        allow_unicode=True,
-        sort_keys=False,
-        default_flow_style=False,
-    ).rstrip()
-    return f"---\n{front_matter}\n---\n\n{body.lstrip()}"
-
-
-def prepare_content() -> None:
-    if BUILD_ROOT.exists():
-        shutil.rmtree(BUILD_ROOT)
-    shutil.copytree(CONTENT_ROOT, BUILD_ROOT / "content")
-
-    for article in load_articles():
-        metadata = dict(article.metadata)
-        original_tags = metadata.get("tags") or []
-        metadata["tags"] = list(
-            dict.fromkeys([metadata["topic"], metadata["audience"], *original_tags])
-        )
-        destination = BUILD_ROOT / "content" / article.path.relative_to(CONTENT_ROOT)
-        destination.write_text(
-            _render_front_matter(metadata, article.body),
-            encoding="utf-8",
-        )
-
-
 def run_mkdocs() -> None:
-    environment = os.environ.copy()
-    environment["WIKI_DOCS_DIR"] = str(BUILD_ROOT / "content")
     subprocess.run(
         [
             sys.executable,
@@ -63,7 +26,6 @@ def run_mkdocs() -> None:
             str(SITE_ROOT),
         ],
         cwd=ROOT,
-        env=environment,
         check=True,
     )
 
@@ -136,14 +98,6 @@ def verify_site() -> None:
 
 
 def main() -> int:
-    errors = validate_content()
-    if errors:
-        print("Content validation failed:", file=sys.stderr)
-        for error in errors:
-            print(f"- {error}", file=sys.stderr)
-        return 1
-
-    prepare_content()
     assemble_site()
     verify_site()
     print(f"Built and verified site at {SITE_ROOT}")

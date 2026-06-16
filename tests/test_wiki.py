@@ -1,75 +1,62 @@
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 
 import yaml
 
 from scripts.build_site import SITE_ROOT, verify_site
-from scripts.validate_content import CONTENT_ROOT, validate_content
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
-
-def test_repository_content_is_valid() -> None:
-    assert validate_content() == []
-
-
-def test_missing_media_is_rejected(tmp_path: Path) -> None:
-    copied_content = tmp_path / "content"
-    shutil.copytree(CONTENT_ROOT, copied_content)
-    article = copied_content / "articles" / "missing-media.md"
-    article.write_text(
-        """---
-title: Missing media
-summary: This article should fail validation.
-topic: Foundations
-audience: Beginner
-tags: []
-author: Test
-updated: 2026-06-15
----
-
-![Missing file](/wiki/media/missing.png)
-""",
-        encoding="utf-8",
-    )
-
-    errors = validate_content(copied_content)
-    assert any("referenced media does not exist" in error for error in errors)
+EXPECTED_PAGE_FILES = {
+    "content/index.md",
+    "content/pages/getting-started.md",
+    "content/pages/tools-and-recipes.md",
+    "content/pages/resources.md",
+}
 
 
-def test_decap_has_one_public_article_collection() -> None:
+def _assert_pages_collection(config: dict) -> None:
+    assert config["media_folder"] == "content/media"
+    assert len(config["collections"]) == 1
+    collection = config["collections"][0]
+    assert collection["name"] == "pages"
+    assert "folder" not in collection
+    files = collection["files"]
+    assert {entry["file"] for entry in files} == EXPECTED_PAGE_FILES
+    for entry in files:
+        field_names = [field["name"] for field in entry["fields"]]
+        assert field_names == ["body"]
+
+
+def test_decap_editor_uses_a_files_pages_collection() -> None:
     config = yaml.safe_load((ROOT / "admin" / "config.yml").read_text("utf-8"))
 
     assert config["backend"]["name"] == "github"
     assert config["backend"]["branch"] == "main"
-    assert config["media_folder"] == "content/media"
     assert config["public_folder"] == "REPLACE_WITH_MEDIA_PATH"
-    assert len(config["collections"]) == 1
-    collection = config["collections"][0]
-    assert collection["folder"] == "content/articles"
-    assert "media_folder" not in collection
-    assert "public_folder" not in collection
+    _assert_pages_collection(config)
 
 
-def test_netlify_hosts_the_working_editor() -> None:
+def test_netlify_broker_config_matches() -> None:
     config = yaml.safe_load(
         (ROOT / "oauth-broker" / "admin" / "config.yml").read_text("utf-8")
     )
-    index = (ROOT / "oauth-broker" / "admin" / "index.html").read_text("utf-8")
 
-    assert config["backend"] == {
-        "name": "github",
-        "repo": "simo-berrada/wiki",
-        "branch": "main",
-    }
-    assert config["media_folder"] == "content/media"
-    assert len(config["collections"]) == 1
-    assert "media_folder" not in config["collections"][0]
-    assert "public_folder" not in config["collections"][0]
+    assert config["backend"]["name"] == "github"
+    assert config["backend"]["repo"] == "simo-berrada/wiki"
+    assert config["backend"]["branch"] == "main"
+    _assert_pages_collection(config)
+
+
+def test_admin_index_self_hosts_the_editor() -> None:
+    index = (ROOT / "admin" / "index.html").read_text("utf-8")
+
     assert 'rel="cms-config-url"' in index
+    assert "decap-cms" in index
+    # The editor is served from the wiki itself, not a redirect to Netlify.
+    assert "http-equiv" not in index
 
 
 def test_github_pages_workflow_builds_and_deploys() -> None:
@@ -92,6 +79,5 @@ def test_built_site_contains_wiki_and_editor() -> None:
     assert (SITE_ROOT / "admin" / "index.html").exists()
     assert (SITE_ROOT / "admin" / "config.yml").exists()
     admin_index = (SITE_ROOT / "admin" / "index.html").read_text(encoding="utf-8")
-    assert "iridescent-quokka-3f9b9b.netlify.app/admin/" in admin_index
-    assert not (SITE_ROOT / "internal").exists()
+    assert "decap-cms" in admin_index
     verify_site()

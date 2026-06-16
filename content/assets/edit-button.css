@@ -1,0 +1,25 @@
+/* "Edit" button in the Material header. */
+.wiki-edit-button.md-button {
+  margin: 0 0.6rem 0 auto;
+  padding: 0.25rem 0.7rem;
+  color: var(--md-primary-bg-color);
+  border-color: var(--md-primary-bg-color);
+  font-size: 0.7rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.wiki-edit-button.md-button:hover {
+  color: var(--md-primary-color);
+  background-color: var(--md-primary-bg-color);
+  border-color: var(--md-primary-bg-color);
+}
+
+/* When the search box is present it already pushes things; keep the button
+   from being squashed on small screens. */
+@media screen and (max-width: 76.1875em) {
+  .wiki-edit-button.md-button {
+    margin-left: auto;
+  }
+}
