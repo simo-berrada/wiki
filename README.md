@@ -57,6 +57,8 @@ deployed site, which has the OAuth broker configured.)
 GitHub Actions builds, tests, and deploys every push to `main`. Complete the
 initial setup in [OPERATIONS.md](OPERATIONS.md).
 
-The workflow automatically fills the GitHub repository and Pages URL into the
-built Decap configuration. The repository variable `DECAP_SITE_DOMAIN` identifies
-the Netlify OAuth broker used invisibly for GitHub login.
+The browser editor and its GitHub login run on a small Netlify site (the editor
+at `/admin/`, the login at `/.netlify/functions/`), so sign-in happens on one web
+address and is not blocked by locked-down corporate browsers. The repository
+variable `DECAP_SITE_DOMAIN` is that Netlify domain; it is where the wiki's
+**Edit** button sends people. Full setup is in [OPERATIONS.md](OPERATIONS.md).

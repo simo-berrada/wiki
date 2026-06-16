@@ -73,34 +73,38 @@ The first deployment can take several minutes.
 At this point the wiki works for readers. The built-in editor at `/admin/` needs
 the GitHub login configured in sections 4-6 before anyone can save.
 
+The editor and its login both run on a small **Netlify** site, so the GitHub
+sign-in happens on a single web address and is not blocked by locked-down
+corporate browsers. Sections 4-6 set this up once.
+
 ## 4. Create a GitHub OAuth application
 
-The OAuth app allows the editor to ask GitHub who is signing in. Its secret must
-never be committed to this public repository.
+The OAuth app lets the editor ask GitHub who is signing in. Its secret must never
+be committed to this public repository.
 
 1. In GitHub, open your profile menu and select **Settings**.
 2. Select **Developer settings**.
 3. Select **OAuth Apps**.
 4. Select **New OAuth App**.
-5. Use:
+5. Use (replace the Netlify address with your own once you have it from step 5):
 
 ```text
 Application name: WOAH Data Science Wiki Editor
-Homepage URL: https://YOUR-GITHUB-NAME.github.io/wiki/
-Authorization callback URL: https://api.netlify.com/auth/done
+Homepage URL: https://YOUR-NETLIFY-SITE.netlify.app/admin/
+Authorization callback URL: https://YOUR-NETLIFY-SITE.netlify.app/.netlify/functions/callback
 ```
 
 6. Select **Register application**.
 7. Record the **Client ID**.
 8. Generate and record one **Client secret**.
 
-Treat the client secret like a password.
+Treat the client secret like a password. The callback URL must match the Netlify
+site exactly — if you rename the site later, update it here too.
 
-## 5. Create the free OAuth broker
+## 5. Deploy the Netlify editor and login service
 
-Decap's official GitHub backend requires a server for authentication. Netlify
-provides that OAuth exchange service, even though the actual wiki remains hosted
-on GitHub Pages.
+The repository already contains the editor (`oauth-broker/admin/`) and the login
+functions (`netlify/functions/`). Netlify hosts both.
 
 1. Create a free account at <https://app.netlify.com>.
 2. Select **Add new project > Import an existing project**.
@@ -110,40 +114,46 @@ on GitHub Pages.
 ```text
 Build command: leave empty
 Publish directory: oauth-broker
+Functions directory: netlify/functions   (already set in netlify.toml)
 ```
 
-5. Deploy the project.
-6. Record its URL, for example:
+5. Deploy the project, then record its URL, for example:
 
 ```text
 https://woah-wiki-auth.netlify.app
 ```
 
-7. In Netlify, open:
-   **Project configuration > Access & security > OAuth**.
-8. Under Authentication Providers, select **Install Provider**.
-9. Select **GitHub**.
-10. Enter the GitHub OAuth Client ID and Client secret.
-11. Save.
+6. Open **Project configuration > Environment variables** and add two variables
+   (from the GitHub OAuth app in step 4):
 
-The Netlify project is only the login broker. Readers continue to use the
-GitHub Pages address.
+```text
+OAUTH_CLIENT_ID      = <your Client ID>
+OAUTH_CLIENT_SECRET  = <your Client secret>
+```
 
-## 6. Connect Decap to the OAuth broker
+7. Trigger a redeploy (**Deploys > Trigger deploy**) so the variables take effect.
+8. If you used a placeholder Netlify address in step 4, go back and update the
+   GitHub OAuth app's Homepage and callback URLs to the real Netlify address.
+
+> The editor's address is baked into `oauth-broker/admin/config.yml`
+> (`base_url:`). If your Netlify domain is **not**
+> `iridescent-quokka-3f9b9b.netlify.app`, change that one line to your domain and
+> push.
+
+## 6. Point the wiki's Edit button at the editor
 
 In the GitHub repository:
 
 1. Select **Settings > Secrets and variables > Actions**.
 2. Open the **Variables** tab.
-3. Select **New repository variable**.
+3. Select **New repository variable** (or edit the existing one).
 4. Name it exactly:
 
 ```text
 DECAP_SITE_DOMAIN
 ```
 
-5. Set its value to the Netlify project domain without `https://` or a trailing
-   slash:
+5. Set its value to the Netlify domain without `https://` or a trailing slash:
 
 ```text
 woah-wiki-auth.netlify.app
@@ -154,13 +164,8 @@ woah-wiki-auth.netlify.app
 8. Select **Run workflow** on branch `main`.
 9. Wait for the deployment to finish.
 
-Then open the editor on the wiki itself:
-
-```text
-https://YOUR-GITHUB-NAME.github.io/wiki/admin/
-```
-
-Select **Login with GitHub** and approve the OAuth request.
+Now the **Edit** button on the public wiki sends people to the Netlify editor.
+Open it and select **Login with GitHub** to confirm sign-in completes.
 
 ## 7. Approve editors
 
@@ -214,7 +219,8 @@ To add a new page, see [README.md](README.md).
 
 - Everything is public, including uploaded images and repository history.
 - GitHub Pages does not provide private sections.
-- Never commit the OAuth client secret.
+- Never commit the OAuth client secret; it lives only in Netlify environment
+  variables (`OAUTH_CLIENT_SECRET`).
 - Editors must be GitHub collaborators with write access.
 - Remove repository access when somebody should no longer edit.
 - If a build fails, the live site remains on its previous version.
@@ -225,8 +231,9 @@ To add a new page, see [README.md](README.md).
 - [ ] Push branch `main`.
 - [ ] Enable GitHub Pages with GitHub Actions.
 - [ ] Confirm the public wiki works.
-- [ ] Create the GitHub OAuth application.
-- [ ] Create the free Netlify OAuth broker.
+- [ ] Create the GitHub OAuth application (callback = Netlify `/.netlify/functions/callback`).
+- [ ] Deploy the Netlify editor (publish `oauth-broker`, functions `netlify/functions`).
+- [ ] Set `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` in Netlify and redeploy.
 - [ ] Add the `DECAP_SITE_DOMAIN` repository variable.
 - [ ] Invite editors as GitHub collaborators.
 - [ ] Publish and verify a test edit.
@@ -236,4 +243,4 @@ References:
 - [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)
 - [GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
 - [Decap GitHub backend](https://decapcms.org/docs/github-backend/)
-- [Netlify OAuth provider setup](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/)
+- [Decap external OAuth clients](https://decapcms.org/docs/external-oauth-clients/)

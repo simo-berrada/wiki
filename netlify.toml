@@ -1,2 +1,3 @@
 [build]
   publish = "oauth-broker"
+  functions = "netlify/functions"

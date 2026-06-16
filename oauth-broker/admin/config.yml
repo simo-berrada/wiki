@@ -2,6 +2,10 @@ backend:
   name: github
   repo: simo-berrada/wiki
   branch: main
+  # Log in via our own function on this same Netlify site (same-origin), so the
+  # GitHub login works even in locked-down corporate browsers.
+  base_url: https://iridescent-quokka-3f9b9b.netlify.app
+  auth_endpoint: .netlify/functions/auth
 
 publish_mode: simple
 site_url: https://simo-berrada.github.io/wiki/

@@ -39,8 +39,6 @@ def install_admin() -> None:
     destination = SITE_ROOT / "admin"
     shutil.copytree(ROOT / "admin", destination)
 
-    config_path = destination / "config.yml"
-    config = config_path.read_text(encoding="utf-8")
     repository = os.environ.get(
         "WIKI_GITHUB_REPOSITORY", "REPLACE_WITH_GITHUB_REPOSITORY"
     )
@@ -58,9 +56,16 @@ def install_admin() -> None:
         "REPLACE_WITH_SITE_URL": site_url,
         "REPLACE_WITH_MEDIA_PATH": _site_media_path(site_url),
     }
-    for placeholder, value in replacements.items():
-        config = config.replace(placeholder, value)
-    config_path.write_text(config, encoding="utf-8")
+
+    # The editor itself is hosted on Netlify; on GitHub Pages the /admin/ page is
+    # just a redirect to it, and config.yml is kept for reference. Fill the
+    # placeholders in both text files.
+    for name in ("config.yml", "index.html"):
+        path = destination / name
+        text = path.read_text(encoding="utf-8")
+        for placeholder, value in replacements.items():
+            text = text.replace(placeholder, value)
+        path.write_text(text, encoding="utf-8")
 
 
 def assemble_site() -> None:

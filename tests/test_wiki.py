@@ -39,24 +39,39 @@ def test_decap_editor_uses_a_files_pages_collection() -> None:
     _assert_pages_collection(config)
 
 
-def test_netlify_broker_config_matches() -> None:
+def test_netlify_editor_uses_same_origin_login() -> None:
     config = yaml.safe_load(
         (ROOT / "oauth-broker" / "admin" / "config.yml").read_text("utf-8")
     )
+    backend = config["backend"]
 
-    assert config["backend"]["name"] == "github"
-    assert config["backend"]["repo"] == "simo-berrada/wiki"
-    assert config["backend"]["branch"] == "main"
+    assert backend["name"] == "github"
+    assert backend["repo"] == "simo-berrada/wiki"
+    assert backend["branch"] == "main"
+    # Login goes through our own function on the same Netlify site, not the
+    # cross-site api.netlify.com broker.
+    assert backend["auth_endpoint"] == ".netlify/functions/auth"
+    assert backend["base_url"].startswith("https://")
+    assert "api.netlify.com" not in backend["base_url"]
+    assert "site_domain" not in backend
     _assert_pages_collection(config)
 
 
-def test_admin_index_self_hosts_the_editor() -> None:
+def test_oauth_functions_exist() -> None:
+    functions = ROOT / "netlify" / "functions"
+    assert (functions / "auth.js").exists()
+    callback = (functions / "callback.js").read_text("utf-8")
+    # The handshake strings Decap CMS listens for.
+    assert "authorizing:github" in callback
+    assert "authorization:github:" in callback
+
+
+def test_admin_index_redirects_to_the_editor() -> None:
     index = (ROOT / "admin" / "index.html").read_text("utf-8")
 
-    assert 'rel="cms-config-url"' in index
-    assert "decap-cms" in index
-    # The editor is served from the wiki itself, not a redirect to Netlify.
-    assert "http-equiv" not in index
+    # On GitHub Pages /admin/ is a redirect to the Netlify-hosted editor.
+    assert "http-equiv" in index
+    assert "REPLACE_WITH_DECAP_SITE_DOMAIN/admin/" in index
 
 
 def test_github_pages_workflow_builds_and_deploys() -> None:
@@ -79,5 +94,5 @@ def test_built_site_contains_wiki_and_editor() -> None:
     assert (SITE_ROOT / "admin" / "index.html").exists()
     assert (SITE_ROOT / "admin" / "config.yml").exists()
     admin_index = (SITE_ROOT / "admin" / "index.html").read_text(encoding="utf-8")
-    assert "decap-cms" in admin_index
+    assert "/admin/" in admin_index
     verify_site()
