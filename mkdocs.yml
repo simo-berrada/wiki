@@ -14,25 +14,34 @@ nav:
 theme:
   name: material
   language: en
+  logo: assets/woah-mark-white.svg
+  favicon: assets/favicon.svg
+  font:
+    text: Inter
+    code: Roboto Mono
   features:
+    - navigation.instant
+    - navigation.instant.progress
     - navigation.indexes
     - navigation.sections
     - navigation.top
+    - navigation.footer
     - search.highlight
     - search.suggest
     - content.code.copy
+    - toc.follow
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: blue
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: blue
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -53,10 +62,14 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: true
 
 extra_css:
+  - assets/brand.css
   - assets/edit-button.css
 
 extra_javascript:

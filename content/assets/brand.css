@@ -1,0 +1,357 @@
+/* =========================================================================
+   WOAH brand theme for the Data Science Wiki
+   Palette (from the WOAH Brand Manual v3.0):
+     Orange   #FF4815   primary
+     Charcoal #27282A   dark grey / text
+     Beige    #EFEEE8   warm neutral surface
+     Blue     #203CA9 · Green #009D5E   secondary accents
+   Type: Inter (a clean grotesque close in spirit to the brand's Söhne).
+   ========================================================================= */
+
+:root {
+  --woah-orange:        #ff4815;
+  --woah-orange-dark:   #e23b0d;
+  --woah-orange-deep:   #c23209;
+  --woah-charcoal:      #27282a;
+  --woah-charcoal-soft: #3a3c40;
+  --woah-beige:         #efeee8;
+  --woah-beige-soft:    #f6f5f0;
+  --woah-blue:          #203ca9;
+  --woah-green:         #009d5e;
+
+  /* Material primary / accent -> WOAH orange */
+  --md-primary-fg-color:        var(--woah-orange);
+  --md-primary-fg-color--light: var(--woah-orange-dark);
+  --md-primary-fg-color--dark:  var(--woah-orange-deep);
+  --md-primary-bg-color:        #ffffff;
+  --md-primary-bg-color--light: rgba(255, 255, 255, 0.72);
+
+  --md-accent-fg-color:         var(--woah-orange-dark);
+  --md-accent-fg-color--transparent: rgba(255, 72, 21, 0.1);
+}
+
+/* ---- Light scheme -------------------------------------------------------- */
+[data-md-color-scheme="default"] {
+  --md-default-bg-color:        var(--woah-beige-soft);
+  --md-default-fg-color:        var(--woah-charcoal);
+  --md-default-fg-color--light: rgba(39, 40, 42, 0.62);
+  --md-default-fg-color--lighter: rgba(39, 40, 42, 0.34);
+
+  --md-typeset-color:           var(--woah-charcoal);
+  --md-typeset-a-color:         var(--woah-orange-deep);
+
+  --md-code-bg-color:           #f0eee6;
+  --md-code-fg-color:           #5a4632;
+
+  --md-footer-bg-color:         var(--woah-charcoal);
+  --md-footer-bg-color--dark:   #1d1e20;
+}
+
+/* ---- Dark scheme (charcoal base, orange accents) ------------------------ */
+[data-md-color-scheme="slate"] {
+  --md-hue: 222;
+  --md-default-bg-color:        #1c1d1f;
+  --md-default-fg-color:        rgba(255, 255, 255, 0.9);
+  --md-default-fg-color--light: rgba(255, 255, 255, 0.62);
+
+  --md-typeset-color:           rgba(255, 255, 255, 0.86);
+  --md-typeset-a-color:         #ff7048;
+
+  --md-code-bg-color:           #2a2b2e;
+  --md-primary-fg-color:        #232427;   /* charcoal header in dark mode */
+  --md-primary-bg-color:        #ffffff;
+
+  --md-footer-bg-color:         #141517;
+}
+
+/* =========================================================================
+   Typography
+   ========================================================================= */
+body,
+.md-typeset {
+  font-feature-settings: "kern", "liga", "calt";
+  -webkit-font-smoothing: antialiased;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--woah-charcoal);
+}
+
+[data-md-color-scheme="slate"] .md-typeset h1,
+[data-md-color-scheme="slate"] .md-typeset h2,
+[data-md-color-scheme="slate"] .md-typeset h3 {
+  color: #fff;
+}
+
+.md-typeset h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* A short orange rule under top-level headings — a brand signature. */
+.md-typeset h1 {
+  position: relative;
+  padding-bottom: 0.35em;
+}
+.md-typeset h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 2.4rem;
+  height: 0.2rem;
+  border-radius: 0.2rem;
+  background: var(--woah-orange);
+}
+
+/* =========================================================================
+   Header
+   ========================================================================= */
+.md-header {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+[data-md-color-scheme="default"] .md-header {
+  background-color: var(--woah-orange);
+}
+
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Give the wordmark logo a touch more room. */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 1.5rem;
+  width: auto;
+}
+
+/* Tabs (if enabled) sit on a slightly deeper orange. */
+.md-tabs {
+  background-color: var(--woah-orange-dark);
+}
+
+/* =========================================================================
+   Links & inline accents
+   ========================================================================= */
+.md-typeset a {
+  text-decoration-color: rgba(255, 72, 21, 0.4);
+  text-underline-offset: 0.15em;
+  transition: color 0.15s ease;
+}
+.md-typeset a:hover {
+  color: var(--woah-orange);
+}
+
+/* =========================================================================
+   Buttons (used by the Edit button and call-to-actions)
+   ========================================================================= */
+.md-typeset .md-button {
+  border-radius: 2rem;
+  border-width: 2px;
+  font-weight: 600;
+}
+.md-typeset .md-button--primary {
+  background-color: var(--woah-orange);
+  border-color: var(--woah-orange);
+  color: #fff;
+}
+.md-typeset .md-button--primary:hover {
+  background-color: var(--woah-orange-deep);
+  border-color: var(--woah-orange-deep);
+}
+
+/* =========================================================================
+   Navigation
+   ========================================================================= */
+.md-nav__link:focus,
+.md-nav__link:hover {
+  color: var(--woah-orange);
+}
+.md-nav__item .md-nav__link--active {
+  color: var(--woah-orange-deep);
+  font-weight: 700;
+}
+[data-md-color-scheme="slate"] .md-nav__item .md-nav__link--active {
+  color: #ff7048;
+}
+
+/* Section labels in the sidebar */
+.md-nav__title {
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================================
+   Search
+   ========================================================================= */
+.md-search__form {
+  border-radius: 2rem;
+}
+.md-search-result__link:hover .md-search-result__title,
+.md-search-result__link[data-md-state="active"] .md-search-result__title {
+  color: var(--woah-orange-deep);
+}
+
+/* =========================================================================
+   Admonitions — recolour the most common ones to the brand
+   ========================================================================= */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 0.5rem;
+  border-left-width: 0.25rem;
+  box-shadow: 0 1px 3px rgba(39, 40, 42, 0.08);
+}
+
+/* Note / info -> orange */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-color: var(--woah-orange);
+}
+.md-typeset .note > .admonition-title,
+.md-typeset .note > summary {
+  background-color: rgba(255, 72, 21, 0.1);
+}
+.md-typeset .note > .admonition-title::before,
+.md-typeset .note > summary::before {
+  background-color: var(--woah-orange);
+}
+
+/* tip -> green */
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-color: var(--woah-green);
+}
+.md-typeset .tip > .admonition-title,
+.md-typeset .tip > summary {
+  background-color: rgba(0, 157, 94, 0.1);
+}
+.md-typeset .tip > .admonition-title::before,
+.md-typeset .tip > summary::before {
+  background-color: var(--woah-green);
+}
+
+/* info -> blue */
+.md-typeset .admonition.info,
+.md-typeset details.info {
+  border-color: var(--woah-blue);
+}
+.md-typeset .info > .admonition-title,
+.md-typeset .info > summary {
+  background-color: rgba(32, 60, 169, 0.08);
+}
+.md-typeset .info > .admonition-title::before,
+.md-typeset .info > summary::before {
+  background-color: var(--woah-blue);
+}
+
+/* =========================================================================
+   Tables
+   ========================================================================= */
+.md-typeset table:not([class]) th {
+  background-color: var(--woah-charcoal);
+  color: #fff;
+  font-weight: 600;
+}
+[data-md-color-scheme="default"]
+  .md-typeset table:not([class]) tr:hover {
+  background-color: rgba(255, 72, 21, 0.05);
+}
+
+/* =========================================================================
+   Code
+   ========================================================================= */
+.md-typeset code {
+  border-radius: 0.3rem;
+}
+.md-typeset .highlight {
+  border-radius: 0.5rem;
+}
+
+/* =========================================================================
+   Footer
+   ========================================================================= */
+.md-footer-meta {
+  background-color: var(--md-footer-bg-color--dark, #1d1e20);
+}
+
+/* =========================================================================
+   Home / landing — hero + grid cards
+   ========================================================================= */
+.woah-hero {
+  margin: 0 0 2.5rem;
+  padding: 2.6rem 2.4rem;
+  border-radius: 1rem;
+  background:
+    radial-gradient(120% 140% at 100% 0%, #ff6a3d 0%, var(--woah-orange) 42%, var(--woah-orange-deep) 100%);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(194, 50, 9, 0.28);
+  overflow: hidden;
+  position: relative;
+}
+.woah-hero::after {
+  /* faint brand ring motif in the corner */
+  content: "";
+  position: absolute;
+  right: -60px;
+  top: -60px;
+  width: 220px;
+  height: 220px;
+  border: 28px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+.woah-hero h1,
+.md-typeset .woah-hero h1 {
+  color: #fff;
+  margin: 0 0 0.4rem;
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+  padding-bottom: 0;
+}
+.woah-hero h1::after { display: none; }
+.woah-hero p {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+}
+.woah-hero .woah-eyebrow {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 0.6rem;
+}
+
+/* Grid cards: lift on hover, orange top accent. */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border-radius: 0.7rem;
+  border: 1px solid rgba(39, 40, 42, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-3px);
+  border-color: var(--woah-orange);
+  box-shadow: 0 10px 24px rgba(39, 40, 42, 0.12);
+}
+.md-typeset .grid.cards > ul > li > hr {
+  border-bottom: 2px solid var(--woah-orange);
+  margin: 0.6rem 0 0.8rem;
+}
+
+/* =========================================================================
+   Scrollbar (subtle brand touch on desktop)
+   ========================================================================= */
+@media (pointer: fine) {
+  * {
+    scrollbar-color: rgba(255, 72, 21, 0.5) transparent;
+  }
+}
