@@ -1,3 +1,9 @@
 [build]
   publish = "oauth-broker"
   functions = "netlify/functions"
+  # This Netlify site only hosts the editor login broker (the /admin/ editor
+  # and the OAuth functions). The wiki itself is served by GitHub Pages, which
+  # is free. To avoid burning Netlify credits, skip a deploy unless this commit
+  # actually changed the broker — i.e. ignore the (frequent) content-only edits.
+  # The ignore command exits 0 to SKIP the build, non-zero to PROCEED.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- oauth-broker netlify netlify.toml"
