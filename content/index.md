@@ -9,29 +9,27 @@ know — explanations, practical methods, useful links, and lessons learned.
 
 <div class="grid cards" markdown>
 
--   :material-rocket-launch-outline:{ .lg .middle } __Getting started__
+* :material-rocket-launch-outline:{ .lg .middle } **Getting started**
 
-    ---
+  - - -
 
-    New to the team or to Data Science at WOAH? Begin here for the essentials.
+  New to the team or to Data Science at WOAH? Begin here for the essentials.
 
-    [:octicons-arrow-right-24: Getting started](pages/getting-started.md)
+  [:octicons-arrow-right-24: Getting started](pages/getting-started.md)
+* :material-tools:{ .lg .middle } **Tools & recipes**
 
--   :material-tools:{ .lg .middle } __Tools & recipes__
+  - - -
 
-    ---
+  Practical how-tos, code snippets, and the tools the team uses day to day.
 
-    Practical how-tos, code snippets, and the tools the team uses day to day.
+  [:octicons-arrow-right-24: Tools and recipes](pages/tools-and-recipes.md)
+* :material-bookshelf:{ .lg .middle } **Resources**
 
-    [:octicons-arrow-right-24: Tools and recipes](pages/tools-and-recipes.md)
+  - - -
 
--   :material-bookshelf:{ .lg .middle } __Resources__
+  Useful links, references, and reading to go deeper on a topic.
 
-    ---
-
-    Useful links, references, and reading to go deeper on a topic.
-
-    [:octicons-arrow-right-24: Resources](pages/resources.md)
+  [:octicons-arrow-right-24: Resources](pages/resources.md)
 
 </div>
 
@@ -44,15 +42,3 @@ GitHub — or edit the Markdown in `content/` directly.
 !!! warning "This wiki is public"
     Do not add confidential, personal, regulated, or security-sensitive
     information.
-
-
-
-
-
-This is a test
-
-
-
-
-
-#Hello
